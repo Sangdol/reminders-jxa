@@ -1,6 +1,8 @@
 const runJxa = require('run-jxa');
+
+// https://sugarjs.com/dates/#/Parsing
 const Sugar = require('sugar-date');
-Sugar.Date.extend();
+Sugar.Date.extend();  // To use Sugar functions with native JS objects.
 
 function addToReminders(name, dueDate) {
   const reminders = Application('Reminders');
@@ -15,6 +17,18 @@ function addToReminders(name, dueDate) {
 
   // TODO return an error message if an error occurs.
   return 'succeed';
+}
+
+function parseText(args) {
+  const texts = args.split(' r ');
+  const name = texts[0];
+  let dateStr = (texts.length > 1) ? texts[1] : undefined;
+
+  if (dateStr) {
+    dateStr = dateStr.replace(/min(s)*/, 'minutes');
+  }
+
+  return {name, dateStr};
 }
 
 (async () => {
@@ -44,3 +58,5 @@ function addToReminders(name, dueDate) {
     // TODO add notification
   }
 })();
+
+module.exports = { parseText };

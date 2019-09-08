@@ -1,9 +1,10 @@
 {
-  "name": "alfred-reminders-workflow",
+  "name": "reminders-jxa",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "tdd": "ava --watch",
     "test": "ava"
   },
   "author": "",
