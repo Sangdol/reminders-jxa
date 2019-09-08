@@ -4,6 +4,9 @@ const runJxa = require('run-jxa');
 const Sugar = require('sugar-date');
 Sugar.Date.extend();  // To use Sugar functions with native JS objects.
 
+// https://github.com/chbrown/osx-notifier
+const notify = require('osx-notifier');
+
 function addToReminders(name, dueDate) {
   const reminders = Application('Reminders');
   reminders.includeStandardAdditions = true
@@ -48,14 +51,28 @@ function parseText(args) {
     process.exit();
   }
 
-  const texts = args[0].split(' r ');
-  const name = texts[0];
-  const date = (texts.length > 1) ? Date.create(texts[1]) : null;
+  const {name, dateStr} = parseText(args[0]);
+
+  // TODO when parsing failed
+  const date = dateStr ? Date.create(dateStr) : null;
 
   const result = await runJxa(addToReminders, [name, date]);
+  console.log(result);
 
   if (result == 'succeed') {
-    // TODO add notification
+    notify({
+      type: 'pass',
+      title: `New Todo: ${name}`,
+      message: date ? date.full() : 'Yeah!',
+      group: 'reminders-jxa'
+    });
+  } else {
+    notify({
+      type: 'fail',
+      title: 'Failed to add a new reminder.',
+      message: result,
+      group: 'reminders-jxa'
+    });
   }
 })();
 
