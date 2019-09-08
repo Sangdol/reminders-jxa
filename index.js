@@ -8,18 +8,21 @@ Sugar.Date.extend();  // To use Sugar functions with native JS objects.
 const notify = require('osx-notifier');
 
 function addToReminders(name, dueDate) {
-  const reminders = Application('Reminders');
-  reminders.includeStandardAdditions = true
+  try {
+    const reminders = Application('Reminders');
+    reminders.includeStandardAdditions = true
 
-  const reminderProps = dueDate ?
-    {name, dueDate: new Date(dueDate)} :
-    {name};
+    const reminderProps = dueDate ?
+      {name, dueDate: new Date(dueDate)} :
+      {name};
 
-  const newReminder = reminders.Reminder(reminderProps);
-  reminders.lists.byName('Todos').reminders.push(newReminder);
+    const newReminder = reminders.Reminder(reminderProps);
+    reminders.lists.byName('Todos').reminders.push(newReminder);
 
-  // TODO return an error message if an error occurs.
-  return 'succeed';
+    return 'succeed';
+  } catch (e) {
+    return e.message;
+  }
 }
 
 function parseText(args) {
