@@ -37,6 +37,23 @@ function parseText(args) {
   return {name, dateStr};
 }
 
+function parseDate(dateStr) {
+  if (!dateStr) return null;
+
+  let date = Date.create(dateStr);
+  if (date.toString() == 'Invalid Date') {
+    notify({
+      type: 'fail',
+      title: `Fail to parse the date string.`,
+      message: dateStr,
+      group: 'reminders-jxa'
+    });
+    return null
+  } else {
+    return date;
+  }
+}
+
 (async () => {
   const args = process.argv.slice(2);
   const usage = `
@@ -55,9 +72,7 @@ function parseText(args) {
   }
 
   const {name, dateStr} = parseText(args[0]);
-
-  // TODO when parsing failed
-  const date = dateStr ? Date.create(dateStr) : null;
+  const date = parseDate(dateStr);
 
   const result = await runJxa(addToReminders, [name, date]);
   console.log(result);
