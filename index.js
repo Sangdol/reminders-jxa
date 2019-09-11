@@ -7,13 +7,13 @@ Sugar.Date.extend();  // To use Sugar functions with native JS objects.
 // https://github.com/chbrown/osx-notifier
 const notify = require('osx-notifier');
 
-function addToReminders(name, dueDate) {
+function addToReminders(name, remindMeDate) {
   try {
     const reminders = Application('Reminders');
     reminders.includeStandardAdditions = true
 
-    const reminderProps = dueDate ?
-      {name, dueDate: new Date(dueDate)} :
+    const reminderProps = remindMeDate ?
+      {name, remindMeDate: new Date(remindMeDate)} :
       {name};
 
     const newReminder = reminders.Reminder(reminderProps);
