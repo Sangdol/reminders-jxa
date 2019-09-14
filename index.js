@@ -55,6 +55,11 @@ function expandMin(dateStr) {
   return dateStr.replace(/min(s)*/, 'minutes');
 }
 
+function eveningToTime(dateStr) {
+  const eveningTime = '20:00'
+  return dateStr.replace('evening', eveningTime);
+}
+
 function addDefaultTime(dateStr) {
   if (dateStr.startsWith('in') || dateStr.includes(':')) return dateStr;
 
@@ -66,8 +71,14 @@ function addDefaultTime(dateStr) {
 function adjustDateStr(dateStr) {
   if (!dateStr) return dateStr;
 
+  console.log(`Initial dateStr: ${dateStr}`);
+
   dateStr = expandMin(dateStr);
+  dateStr = eveningToTime(dateStr);
   dateStr = addDefaultTime(dateStr);
+
+  console.log(`Final dateStr: ${dateStr}`);
+
   return dateStr;
 }
 
@@ -111,4 +122,4 @@ function adjustDateStr(dateStr) {
   }
 })();
 
-module.exports = { parseText, expandMin, addDefaultTime };
+module.exports = { parseText, expandMin, eveningToTime, addDefaultTime };

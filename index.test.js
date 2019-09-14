@@ -12,12 +12,17 @@ test('expandMin()', (t) => {
   t.is(re.expandMin('in 5 min'), 'in 5 minutes');
 });
 
+test('eveningToTime()', (t) => {
+  t.is(re.eveningToTime('tomorrow evening'), 'tomorrow 20:00');
+  t.is(re.eveningToTime('on 16th evening'), 'on 16th 20:00');
+});
+
 test('addDefaultTime()', (t) => {
   t.is(re.addDefaultTime('tomorrow'), 'tomorrow 8:00');
   t.is(re.addDefaultTime('next monday'), 'next monday 8:00');
   t.is(re.addDefaultTime('on 15th'), 'on 15th 8:00');
 
-  // exception
+  // exceptions
   t.is(re.addDefaultTime('11:00'), '11:00');
   t.is(re.addDefaultTime('tomorrow 11:00'), 'tomorrow 11:00');
   t.is(re.addDefaultTime('next monday 11:00'), 'next monday 11:00');
