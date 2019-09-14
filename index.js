@@ -37,6 +37,15 @@ function parseText(args) {
   return {name, dateStr};
 }
 
+function addDefaultTime(dateStr) {
+  if (!dateStr) return dateStr;
+  if (dateStr.startsWith('in') || dateStr.includes(':')) return dateStr;
+
+  const defaultTime = '8:00';
+
+  return `${dateStr} ${defaultTime}`;
+}
+
 function parseDate(dateStr) {
   if (!dateStr) return null;
 
@@ -71,7 +80,9 @@ function parseDate(dateStr) {
     process.exit();
   }
 
-  const {name, dateStr} = parseText(args[0]);
+  let {name, dateStr} = parseText(args[0]);
+  dateStr = addDefaultTime(dateStr);
+
   const date = parseDate(dateStr);
 
   const result = await runJxa(addToReminders, [name, date]);
@@ -94,4 +105,4 @@ function parseDate(dateStr) {
   }
 })();
 
-module.exports = { parseText };
+module.exports = { parseText, addDefaultTime };
