@@ -30,20 +30,8 @@ function parseText(args) {
   const name = texts[0];
   let dateStr = (texts.length > 1) ? texts[1] : undefined;
 
-  if (dateStr) {
-    dateStr = dateStr.replace(/min(s)*/, 'minutes');
-  }
 
   return {name, dateStr};
-}
-
-function addDefaultTime(dateStr) {
-  if (!dateStr) return dateStr;
-  if (dateStr.startsWith('in') || dateStr.includes(':')) return dateStr;
-
-  const defaultTime = '8:00';
-
-  return `${dateStr} ${defaultTime}`;
 }
 
 function parseDate(dateStr) {
@@ -63,6 +51,26 @@ function parseDate(dateStr) {
   }
 }
 
+function expandMin(dateStr) {
+  return dateStr.replace(/min(s)*/, 'minutes');
+}
+
+function addDefaultTime(dateStr) {
+  if (dateStr.startsWith('in') || dateStr.includes(':')) return dateStr;
+
+  const defaultTime = '8:00';
+
+  return `${dateStr} ${defaultTime}`;
+}
+
+function adjustDateStr(dateStr) {
+  if (!dateStr) return dateStr;
+
+  dateStr = expandMin(dateStr);
+  dateStr = addDefaultTime(dateStr);
+  return dateStr;
+}
+
 (async () => {
   const args = process.argv.slice(2);
   const usage = `
@@ -80,10 +88,8 @@ function parseDate(dateStr) {
     process.exit();
   }
 
-  let {name, dateStr} = parseText(args[0]);
-  dateStr = addDefaultTime(dateStr);
-
-  const date = parseDate(dateStr);
+  const {name, dateStr} = parseText(args[0]);
+  const date = parseDate(adjustDateStr(dateStr));
 
   const result = await runJxa(addToReminders, [name, date]);
   console.log(result);
@@ -105,4 +111,4 @@ function parseDate(dateStr) {
   }
 })();
 
-module.exports = { parseText, addDefaultTime };
+module.exports = { parseText, expandMin, addDefaultTime };
