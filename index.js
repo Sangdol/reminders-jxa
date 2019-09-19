@@ -102,17 +102,18 @@ function adjustDateStr(dateStr) {
   const {name, dateStr} = parseText(args[0]);
   const date = parseDate(adjustDateStr(dateStr));
 
+  // Send notification first as it takes long to wait.
+  notify({
+    type: 'pass',
+    title: `New Todo: ${name}`,
+    message: date ? date.full() : 'Yeah!',
+    group: 'reminders-jxa'
+  });
+
   const result = await runJxa(addToReminders, [name, date]);
   console.log(result);
 
-  if (result == 'succeed') {
-    notify({
-      type: 'pass',
-      title: `New Todo: ${name}`,
-      message: date ? date.full() : 'Yeah!',
-      group: 'reminders-jxa'
-    });
-  } else {
+  if (result != 'succeed') {
     notify({
       type: 'fail',
       title: 'Failed to add a new reminder.',
