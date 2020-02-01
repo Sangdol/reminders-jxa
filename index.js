@@ -30,7 +30,6 @@ function parseText(args) {
   const name = texts[0];
   let dateStr = (texts.length > 1) ? texts[1] : undefined;
 
-
   return {name, dateStr};
 }
 
@@ -38,6 +37,13 @@ function parseDate(dateStr) {
   if (!dateStr) return null;
 
   let date = Date.create(dateStr);
+
+  // If it takes 'Mon' on Tue it regards it as yesterday.
+  // For a reminder, a user always want to set it for the future.
+  if (date < Date.now()) {
+    date = date.addDays(7);
+  }
+
   if (date.toString() == 'Invalid Date') {
     notify({
       type: 'fail',
