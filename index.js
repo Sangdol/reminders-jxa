@@ -7,7 +7,7 @@ Sugar.Date.extend();  // To use Sugar functions with native JS objects.
 // https://github.com/chbrown/osx-notifier
 const notify = require('osx-notifier');
 
-function addToReminders(name, remindMeDate) {
+function addToReminders(listName, name, remindMeDate) {
   try {
     const reminders = Application('Reminders');
     reminders.includeStandardAdditions = true
@@ -17,9 +17,9 @@ function addToReminders(name, remindMeDate) {
       {name};
 
     const newReminder = reminders.Reminder(reminderProps);
-    reminders.lists.byName('Todos').reminders.push(newReminder);
+    reminders.lists.byName(listName).reminders.push(newReminder);
 
-    return 'succeed';
+    return 'succeeded';
   } catch (e) {
     return e.message;
   }
@@ -89,15 +89,21 @@ function adjustDateStr(dateStr) {
 }
 
 (async () => {
-  const args = process.argv.slice(2);
+  const args = require('minimist')(process.argv.slice(2));
+  const text = args.text
+  const listName = args.list || 'Todos';
+
+  console.log(`Adding ${text} to ${listName}`);
+
   const usage = `
   Usage: node index.js 'name r time and date'
 
   e.g.,
-  node index.js 'run'
-  node index.js 'run r 11:00'
-  node index.js 'run r tomorrow 11:00'
-  node index.js 'run r 11th 11:00'
+  node index.js --text 'run'
+  node index.js --text 'run r 11:00'
+  node index.js --text 'run r tomorrow 11:00'
+  node index.js --text 'run r 11th 11:00'
+  node index.js --text 'run r 11th 11:00' --list English
   `;
 
   if (args.length == 0) {
@@ -105,7 +111,7 @@ function adjustDateStr(dateStr) {
     process.exit();
   }
 
-  const {name, dateStr} = parseText(args[0]);
+  const {name, dateStr} = parseText(text);
   const date = parseDate(adjustDateStr(dateStr));
 
   // Send notification first as it takes long to wait.
@@ -116,10 +122,10 @@ function adjustDateStr(dateStr) {
     group: 'reminders-jxa'
   });
 
-  const result = await runJxa(addToReminders, [name, date]);
+  const result = await runJxa(addToReminders, [listName, name, date]);
   console.log(result);
 
-  if (result != 'succeed') {
+  if (result != 'succeeded') {
     notify({
       type: 'fail',
       title: 'Failed to add a new reminder.',
