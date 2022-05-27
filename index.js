@@ -117,7 +117,7 @@ function adjustDateStr(dateStr) {
   // Send notification first as it takes long to wait.
   notify({
     type: 'pass',
-    title: `New Todo: ${name}`,
+    title: `New item in ${listName}: ${name}`,
     message: date ? date.full() : 'Yeah!',
     group: 'reminders-jxa'
   });
