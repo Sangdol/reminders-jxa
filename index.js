@@ -103,7 +103,7 @@ function adjustDateStr(dateStr) {
   node index.js --text 'run r 11:00'
   node index.js --text 'run r tomorrow 11:00'
   node index.js --text 'run r 11th 11:00'
-  node index.js --text 'run r 11th 11:00' --list English
+  node index.js --text 'run r 11th 11:00' --list Work
   `;
 
   if (args.length == 0) {
