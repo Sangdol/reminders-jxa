@@ -62,6 +62,8 @@ If you're an [Alfred Powerpack](https://www.alfredapp.com/powerpack/) user, you 
 
 Check out [the Alfred Run Script Action page](https://www.alfredapp.com/help/workflows/actions/run-script/) for more information.
 
+![Alfred integration screenshot](/img/alfred-reminders-jxa.png)
+
 License
 ===
 
